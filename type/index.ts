@@ -21,7 +21,7 @@ export interface Assureur {
     email?: string;
     conventions?: {
       acte: string;
-      tauxPriseEnCharge: number; // ex: 0.80 pour 80%
+      tauxPriseEnCharge: number; 
     }[];
   }
 
@@ -47,4 +47,23 @@ export interface Facture {
     statut: 'en_attente' | 'remboursée' | 'rejetée';
   }
   
-  
+ 
+
+export interface NotificationProps {
+  messages: string[]
+}
+
+export interface PatientInsuranceProps {
+  patient: Patient
+  assureurs: Assureur[]
+  onUpdate: (p: Patient) => void
+}
+
+export interface DashboardAssureurProps {
+  assureurs: Assureur[]
+  factures: Facture[]
+}
+
+export interface SuiviRemboursementProps {
+  factures: Facture[]
+}

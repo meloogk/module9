@@ -1,27 +1,53 @@
-// components/AssureurList.tsx
 'use client'
 
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Assureur } from '@/type'
+import { FaMapMarkerAlt, FaPhoneAlt, FaHospitalSymbol } from "react-icons/fa"
 
 interface Props {
-  assureurs: Assureur[]
-  onSelect: (assureur: Assureur) => void
+  readonly assureurs: Assureur[]
+  readonly onSelect: (assureur: Assureur) => void
 }
 
 export default function AssureurList({ assureurs, onSelect }: Props) {
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
       {assureurs.map((assureur) => (
-        <Card key={assureur._id} className="cursor-pointer hover:shadow-lg" onClick={() => onSelect(assureur)}>
-          <CardContent className="space-y-2 p-4">
-            <h2 className="text-lg font-semibold">{assureur.nom}</h2>
-            <p className="text-sm text-muted-foreground">{assureur.adresse}</p>
-            <p className="text-sm text-muted-foreground">{assureur.telephone}</p>
-            {assureur.conventions?.map((conv, i) => (
-              <Badge key={i} className="mr-1">{conv.acte}: {conv.tauxPriseEnCharge * 100}%</Badge>
-            ))}
+        <Card
+          key={assureur._id}
+          onClick={() => onSelect(assureur)}
+          className="cursor-pointer hover:shadow-xl transition-shadow bg-gradient-to-br from-white to-blue-50 border border-blue-100 rounded-xl"
+        >
+          <CardContent className="space-y-4 p-6">
+            <div className="flex items-center space-x-3">
+              <FaHospitalSymbol className="text-blue-600 text-xl" />
+              <h2 className="text-xl font-bold text-blue-900">{assureur.nom}</h2>
+            </div>
+
+            <div className="text-sm text-gray-600 space-y-1">
+              <p className="flex items-center gap-2">
+                <FaMapMarkerAlt className="text-green-600" />
+                {assureur.adresse}
+              </p>
+              <p className="flex items-center gap-2">
+                <FaPhoneAlt className="text-blue-600" />
+                {assureur.telephone}
+              </p>
+            </div>
+
+            {assureur.conventions && assureur.conventions.length > 0 && (
+              <div className="flex flex-wrap gap-2 mt-2">
+                {assureur.conventions.map((conv) => (
+                  <Badge
+                    key={`${assureur._id}-${conv.acte}`}
+                    className="bg-green-100 text-green-700 border border-green-300"
+                  >
+                    {conv.acte}: {conv.tauxPriseEnCharge * 100}%
+                  </Badge>
+                ))}
+              </div>
+            )}
           </CardContent>
         </Card>
       ))}
