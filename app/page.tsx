@@ -1,103 +1,134 @@
-import Image from "next/image";
 
-export default function Home() {
+'use client';
+
+import { useEffect, useState } from 'react';
+import AssureurList from './composants/liste_assureur';
+import ConventionEditor from './composants/convention';
+import PatientInsurance from './composants/assurance_patient';
+import { Assureur, Patient,Facture } from '@/type';
+
+import { Card } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
+import DashboardAssureur from './composants/dashboard_assureur';
+import SuiviRemboursement from './composants/suivi_remboursement';
+import Notification from './composants/notifications';
+export default function AssurancePage() {
+  const [assureurs, setAssureurs] = useState<Assureur[]>([
+    {
+      _id: '1',
+      nom: 'CNAM',
+      email: 'contact@cnam.tn',
+      telephone: '71 123 456',
+      conventions: [
+        { acte: 'Consultation', tauxPriseEnCharge: 0.8 },
+        { acte: 'Radiologie', tauxPriseEnCharge: 0.6 },
+      ],
+    },
+    {
+      _id: '2',
+      nom: 'Assurex',
+      email: 'info@assurex.tn',
+      telephone: '70 987 654',
+      conventions: [],
+    },
+  ]);
+
+  const [selectedAssureur, setSelectedAssureur] = useState<Assureur | null>(null);
+
+  const updateAssureur = (updated: Assureur) => {
+    setAssureurs((prev) =>
+      prev.map((a) => (a._id === updated._id ? updated : a))
+    );
+    setSelectedAssureur(null);
+  };
+
+  const [patient, setPatient] = useState<Patient>({
+    _id: 'p1',
+    nom: 'Doe',
+    prenom: 'Jane',
+    dateNaissance: '1990-01-01',
+    assurance: {
+      assureurId: '1',
+      numeroAdherent: 'CN123456',
+      dateDebut: '2023-01-01',
+      dateFin: '2024-01-01',
+    },
+  });
+
+  const updatePatient = (p: Patient) => {
+    setPatient(p);
+    alert('Infos patient mises à jour !');
+  };
+
+  const [factures, setFactures] = useState<Facture[]>([{
+    _id: 'f1',
+    soinId: 's1',
+    patientId: 'p1',
+    assureurId: '1',
+    dateEmission: '2024-04-01',
+    montantTotal: 100,
+    montantRemboursé: 80,
+    statut: 'remboursée',
+  }, {
+    _id: 'f2',
+    soinId: 's2',
+    patientId: 'p1',
+    assureurId: '1',
+    dateEmission: '2024-04-10',
+    montantTotal: 150,
+    statut: 'en_attente',
+  }]);
+
+  const [notifications, setNotifications] = useState<string[]>([]);
+
+  useEffect(() => {
+    const changed = factures.filter(f => f.statut === 'remboursée');
+    if (changed.length > 0) {
+      setNotifications([`✅ ${changed.length} facture(s) remboursée(s)`]);
+    }
+  }, [factures]);
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div className="p-6 space-y-10">
+      <h1 className="text-2xl font-bold">Gestion des Assurances et Conventions</h1>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      <Notification messages={notifications} />
+
+      <Card className="p-4">
+        <h2 className="text-xl font-semibold mb-4">Liste des Assureurs</h2>
+        <AssureurList assureurs={assureurs} onSelect={setSelectedAssureur} />
+      </Card>
+
+      {selectedAssureur && (
+        <Card className="p-4">
+          <h2 className="text-xl font-semibold mb-4">Modifier les Conventions de {selectedAssureur.nom}</h2>
+          <ConventionEditor assureur={selectedAssureur} onSave={updateAssureur} />
+        </Card>
+      )}
+
+      <Separator />
+
+      <Card className="p-4">
+        <PatientInsurance
+          patient={patient}
+          assureurs={assureurs}
+          onUpdate={updatePatient}
+        />
+      </Card>
+
+      <Separator />
+
+      <Card className="p-4">
+        <h2 className="text-xl font-semibold mb-4">Suivi des Remboursements</h2>
+        <SuiviRemboursement factures={factures} />
+      </Card>
+
+      <Separator />
+
+      <Card className="p-4">
+        <h2 className="text-xl font-semibold mb-4">Dashboard des Assureurs</h2>
+        <DashboardAssureur assureurs={assureurs} factures={factures} />
+      </Card>
     </div>
   );
 }
