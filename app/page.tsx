@@ -14,7 +14,7 @@ import Notification from './composants/notifications';
 
 import { Toaster, toast } from 'sonner';  
 import { Button } from '@/components/ui/button';
-import { FaClipboardList, FaPencilAlt, FaTrash, FaUserShield, FaMoneyCheckAlt, FaChartBar } from 'react-icons/fa'; // Import des icônes de react-icons
+import { FaClipboardList, FaPencilAlt, FaTrash, FaUserShield, FaMoneyCheckAlt, FaChartBar } from 'react-icons/fa'; 
 
 export default function AssurancePage() {
   const [assureurs, setAssureurs] = useState<Assureur[]>([
@@ -145,7 +145,7 @@ export default function AssurancePage() {
       <Separator />
 
       <Card className="p-6 shadow-md">
-        <h2 className="text-xl font-semibold mb-4">
+        <h2 className="text-xl font-semibold mb-4 ">
           <FaMoneyCheckAlt /> Suivi des Remboursements
         </h2>
         <SuiviRemboursement factures={factures} />

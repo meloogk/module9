@@ -54,7 +54,7 @@ export default function ConventionEditor({ assureur, onSave }: Props) {
     }
 
     setLoading(true)
-    await new Promise(resolve => setTimeout(resolve, 1000)) // Simule un délai
+    await new Promise(resolve => setTimeout(resolve, 1000)) 
 
     onSave({ ...assureur, conventions })
 

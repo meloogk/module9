@@ -32,9 +32,9 @@ export default function SuiviRemboursement({ factures }: Props) {
           <div className="space-y-1">
             <p className="font-bold text-blue-900 text-lg">Facture #{facture._id}</p>
             <p className="text-sm text-gray-500">Émise le {facture.dateEmission}</p>
-            <p className="text-sm text-gray-700">Montant : <span className="font-medium text-blue-800">{facture.montantTotal} TND</span></p>
+            <p className="text-sm text-gray-700">Montant : <span className="font-medium text-blue-800">{facture.montantTotal} FCFA</span></p>
             {facture.montantRemboursé && (
-              <p className="text-sm text-green-700 font-medium">Remboursé : {facture.montantRemboursé} TND</p>
+              <p className="text-sm text-green-700 font-medium">Remboursé : {facture.montantRemboursé} FCFA</p>
             )}
           </div>
           <div>
